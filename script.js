@@ -48,8 +48,8 @@ const a_text = document.getElementById('a_text');
 const b_text = document.getElementById('b_text');
 const c_text = document.getElementById('c_text');
 const d_text = document.getElementById('d_text');
-
-
+const submitButton = document.getElementById('submit'); // Get the submit button
+const answerDisplay = document.getElementById('answerDisplay');
 let currentQuiz = 0;
 let  score = 0;
 
@@ -63,8 +63,8 @@ function loadQuiz() {
     b_text.innerText = currentQuizData.b;
     c_text.innerText = currentQuizData.c;
     d_text.innerText = currentQuizData.d;
-}
 
+}
 function deselectAnswers() {
     answerEls.forEach( answerEl => answerEl.checked = false)
         
@@ -80,13 +80,36 @@ function getSelected() {
     return answer;
 }
 
+
 submit.addEventListener('click', ()=> {
     const answer = getSelected();
-    if( answer) {
-        if( answer === quizData[currentQuiz].correct) {
-        score++;
-    }
+    if (answer) {
+        if (answer === quizData[currentQuiz].correct) {
+            score++;
+        } else {
+            // Display the wrong answer for 2 seconds before moving to the next question
+            const h2 = document.createElement('h2');
+            h2.textContent = `Wrong answer! The correct answer is ${quizData[currentQuiz].correct.toUpperCase()}.`;
+            answerDisplay.innerHTML = '';
+            answerDisplay.appendChild(h2);
 
+            setTimeout(() => {
+                answerDisplay.innerHTML = ''; // Clear the content after 2 seconds
+
+                // Proceed to the next question
+                currentQuiz++;
+
+                if (currentQuiz < quizData.length) {
+                    loadQuiz();
+                } else {
+                    // Display the final score when all questions are answered
+                    quiz.innerHTML = `
+                        <h2>You answered ${score}/${quizData.length} questions correctly</h2>
+                        <button onclick="location.reload()">Reload</button>`;
+                }
+            }, 2000);
+            return;
+        }
     currentQuiz++;
 
     if(currentQuiz < quizData.length) {
@@ -97,4 +120,4 @@ submit.addEventListener('click', ()=> {
         <button onclick="location.reload()">Reload</button>`
     }
 }
-})
+});

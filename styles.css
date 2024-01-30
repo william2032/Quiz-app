@@ -68,3 +68,8 @@ button:focus {
   outline: none;
   background-color: #5e3370;
 }
+#answerDisplay {
+    color: red;
+    font-size: .5em;
+    margin-bottom: 10px;
+}
